@@ -4,11 +4,15 @@ import (
     "os"
     "fmt"
     "path"
-    "flag"
+
+    "github.com/u1f408/x"
 )
 
 var (
-    debugFlag = flag.Bool("log.debug", false, "enable debug logging")
+    Version string
+
+    flags = x.NewFlagSet(path.Base(os.Args[0]), Version)
+    debugFlag = flags.F.Bool("log.debug", false, "enable debug logging")
 )
 
 func Logf(format string, a ...any) (int, error) {
@@ -26,14 +30,16 @@ func Debugf(format string, a ...any) (int, error) {
 }
 
 func main() {
-    flag.CommandLine.Usage = func() {
-        fmt.Fprintf(flag.CommandLine.Output(), "proxyssh, from github.com/u1f408/x\n")
-        fmt.Fprintf(flag.CommandLine.Output(), "\n")
-        fmt.Fprintf(flag.CommandLine.Output(), "usage: %s [options] <host> <port>\n", path.Base(os.Args[0]))
-        fmt.Fprintf(flag.CommandLine.Output(), "invocation as SSH proxy: ssh -oProxyCommand='%s %%h %%p' user@host\n", "/path/to/" + path.Base(os.Args[0]))
-        fmt.Fprintf(flag.CommandLine.Output(), "\n")
-        fmt.Fprintf(flag.CommandLine.Output(), "options:\n")
-        flag.CommandLine.PrintDefaults()
+    flags.Usage = func(f *x.FlagSet) {
+        f.Printf("proxyssh, from github.com/u1f408/x")
+        if Version != "" {
+            f.Printf("version %s", Version)
+        }
+
+        f.Printf("\nusage: %s [options] <host> <port>", f.BaseName)
+        f.Printf("invocation as SSH proxy: ssh -oProxyCommand='%s %%h %%p' user@host\n", "/path/to/" + f.BaseName)
+        f.Printf("options:")
+        f.F.PrintDefaults()
     }
 
     xdgConfig, ok := os.LookupEnv("XDG_CONFIG_HOME")
@@ -41,10 +47,10 @@ func main() {
         xdgConfig = path.Join(os.Getenv("HOME"), ".config")
     }
 
-    dumpFlag := flag.Bool("dump", false, "dump proxy configuration")
-    configPath := flag.String("config", path.Join(xdgConfig, "u1f408-x", "proxyssh.yml"), "path to configuration file")
+    dumpFlag := flags.F.Bool("dump", false, "dump proxy configuration")
+    configPath := flags.F.String("config", path.Join(xdgConfig, "u1f408-x", "proxyssh.yml"), "path to configuration file")
 
-    flag.Parse()
+    flags.ParseFromOS()
 
     config := new(Config)
     if err := ParseConfig(config, *configPath); err != nil {
@@ -77,13 +83,12 @@ func main() {
         os.Exit(0)
     }
 
-    if flag.NArg() == 0 {
-        flag.CommandLine.Usage()
-        os.Exit(1)
+    if flags.F.NArg() < 2 {
+        flags.ExitUsage(1)
     }
 
-    host := flag.Arg(0)
-    port := flag.Arg(1)
+    host := flags.F.Arg(0)
+    port := flags.F.Arg(1)
 
     for idx, pr := range config.Proxies {
         t, err := TargetInfoFor(&pr, host, port)

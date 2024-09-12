@@ -27,7 +27,7 @@ func TargetInfoFor(proxy *ProxyConfig, host, port string) (*TargetInfo, error) {
         resolvedHost = strings.TrimSuffix(resolvedHost, proxy.Domain)
     }
 
-    socksUrl, err := ProxyLookup(&proxy.Lookup, proxy.SocksUrl)
+    socksUrl, err := ProxyLookup(&proxy.Lookup, proxy.ProxyUrl)
     if err != nil {
         return nil, fmt.Errorf("failed proxy lookup: %s", err.Error())
     }

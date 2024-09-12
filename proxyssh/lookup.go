@@ -26,9 +26,14 @@ func ProxyLookup(l *ProxyLookupConfig, fallback string) (string, error) {
     var err error
 
     if l.Consul.Enable {
-        potential, err = resolveSRV(l.Consul.ServiceAddr, makeResolverPlain(&l.Consul.Dns))
+        potential, err = resolveSRV(l.Consul.ServiceAddr, makeResolverPlain(&l.Consul.LookupDNS))
         if err == nil && len(potential) > 0 {
-            return "socks5h://" + potential, nil
+            scheme := "socks5"
+            if l.Consul.ProxyDNS {
+                scheme = "socks5h"
+            }
+
+            return scheme + "://" + potential, nil
         }
     }
 

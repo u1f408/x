@@ -12,7 +12,7 @@ func makeResolverSystem() *net.Resolver {
     return &net.Resolver{}
 }
 
-func makeResolverPlain(c *ProxyDns) *net.Resolver {
+func makeResolverPlain(c *ProxyDnsConfig) *net.Resolver {
     if c.Enable == false || c.Host == "" {
         return makeResolverSystem()
     }
@@ -26,7 +26,7 @@ func makeResolverPlain(c *ProxyDns) *net.Resolver {
     }
 }
 
-func makeResolverSocks(socksHostPort string, c *ProxyDns) *net.Resolver {
+func makeResolverSocks(socksHostPort string, c *ProxyDnsConfig) *net.Resolver {
     if c.Enable == false || c.Host == "" {
         return makeResolverSystem()
     }

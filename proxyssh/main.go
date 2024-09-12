@@ -63,18 +63,12 @@ func main() {
             fmt.Printf("proxy %d:\n", i)
             fmt.Printf("  domain: %s\n", pr.Domain)
 
-            if pr.SocksUrl != "" {
-                fmt.Printf("  proxy (in config): %s\n", pr.SocksUrl)
+            if pr.ProxyUrl != "" {
+                fmt.Printf("  proxy (in config): %s\n", pr.ProxyUrl)
             }
 
             if pr.Lookup.Consul.Enable {
                 fmt.Printf("  proxy (Consul lookup): %s\n", pr.Lookup.Consul.ServiceAddr)
-            }
-
-            if pr.Dns.Enable {
-                fmt.Printf("  DNS lookups: proxied - %s:%s\n", pr.Dns.Host, pr.Dns.Port)
-            } else {
-                fmt.Printf("  DNS lookups: not proxied\n", pr.Dns.Host, pr.Dns.Port)
             }
 
             fmt.Println()

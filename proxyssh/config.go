@@ -8,13 +8,13 @@ import (
     "github.com/creasty/defaults"
 )
 
-type ProxyDns struct {
+type ProxyDnsConfig struct {
     Enable bool `yaml:"enable"`
     Host string `yaml:"host"`
     Port string `yaml:"port"`
 }
 
-func (c *ProxyDns) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (c *ProxyDnsConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
     var err error
 
     var rawHostPort string
@@ -40,7 +40,7 @@ func (c *ProxyDns) UnmarshalYAML(unmarshal func(interface{}) error) error {
         return nil
     }
 
-    type plain ProxyDns
+    type plain ProxyDnsConfig
     if err = unmarshal((*plain)(c)); err != nil {
         return err
     }
@@ -50,8 +50,9 @@ func (c *ProxyDns) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 type ProxyLookupConsul struct {
     Enable bool `yaml:"enable" default:"false"`
-    Dns ProxyDns `yaml:"dns"`
     ServiceAddr string `yaml:"service"`
+    LookupDNS ProxyDnsConfig `yaml:"lookup_dns"`
+    ProxyDNS bool `yaml:"proxy_dns" default:"true"`
 }
 
 func (c *ProxyLookupConsul) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -81,8 +82,7 @@ type ProxyLookupConfig struct {
 type ProxyConfig struct {
     Domain string `yaml:"domain"`
     StripDomain bool `yaml:"strip_domain" default:"false"`
-    Dns ProxyDns `yaml:"dns"`
-    SocksUrl string `yaml:"socks"`
+    ProxyUrl string `yaml:"proxy_url"`
     Lookup ProxyLookupConfig `yaml:"lookup"`
 }
 

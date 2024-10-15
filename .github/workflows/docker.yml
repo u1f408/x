@@ -31,7 +31,7 @@ jobs:
     - run: |
         for binary in "uppy"; do
           for tag in latest ${{ env.BRANCH_NAME }} ${{ github.sha }}; do
-            cat Dockerfile.bin | sed "s/__BINARY__/$binary/g" | docker build -t ghcr.io/u1f408/$binary:$tag -f .
+            cat Dockerfile.bin | sed "s/__BINARY__/$binary/g" | docker build -t ghcr.io/u1f408/$binary:$tag -f - .
           done
           if [ "${{ github.repository }}" == "u1f408/x" ]; then
             docker push ghcr.io/u1f408/$binary:${{ env.BRANCH_NAME }}

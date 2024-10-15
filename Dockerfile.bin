@@ -1,0 +1,3 @@
+FROM alpine:latest
+COPY bin/__BINARY__ /bin/__BINARY__
+CMD ["/bin/__BINARY__"]

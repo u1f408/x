@@ -1,0 +1,30 @@
+::root {
+    --bg: #fff;
+    --fg: #000;
+    --link: #008;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    font: 100%/1.2 sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+}
+
+body {
+    padding: 1rem;
+}
+
+h1 {
+    margin: 0 0 1rem 0;
+}
+
+a:not(.button), a:not(.button):visited {
+    color: var(--link);
+    text-decoration: underline;
+}

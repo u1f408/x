@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>uppy!</title>
+</head>
+<body>
+    <h1>uppy!</h1>
+    <p>you are authenticated as: {{ .User }}</p>
+    <form enctype="multipart/form-data" action="/upload" method="POST">
+        <input type="file" name="file" />
+        <button type="submit">uppy!</button>
+    </form>
+</body>
+</html>

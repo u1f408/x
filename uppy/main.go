@@ -130,6 +130,8 @@ func main() {
         os.Exit(2)
 	}
 
+	Debugf("Config.Auth: %+v", Config.Auth)
+
 	mux := http.NewServeMux()
 	mux.Handle("GET /static/", http.FileServer(http.FS(embedFS)))
 	mux.HandleFunc("POST /upload", handleUpload)
@@ -146,7 +148,7 @@ func main() {
 				return
 			}
 
-			hdomain := hval[strings.LastIndex(hval, "@"):]
+			hdomain := strings.TrimPrefix(hval[strings.LastIndex(hval, "@"):], "@")
 			domainOk := false
 			if len(Config.Auth.AllowedDomains) == 0 {
 				domainOk = true
